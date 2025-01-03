@@ -3,6 +3,7 @@ const db = require('../db/connection');
 const {KEY} = require("../constant/constant");
 const authenticateToken = async (req, res, next) => {
     const tokens = req.headers['authorization'];
+    if (!tokens) res.status(401).json({ message: 'Access denied, no token provided' });
     const cleanToken = tokens.split(" ")[1]
     try {
         if (!cleanToken) {
@@ -18,7 +19,7 @@ const authenticateToken = async (req, res, next) => {
             }
         }
     } catch (error) {
-        res.status(403).json({ message: 'Invalid token' });
+        res.status(401).json({ message: 'Invalid token' });
     }
 };
 

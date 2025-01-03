@@ -53,7 +53,21 @@ const register = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    const tokens = req.headers['authorization'];
+    if (!tokens) res.status(401).json({ message: 'Access denied, no token provided' });
+    const cleanToken = tokens.split(" ")[1]
+    try{
+        await db.query('DELETE FROM token where token = ?', [cleanToken]);
+        return res.status(200).json({ message: 'Logout successful'});
+    } catch(err){
+       return res.status(500).json({ message: 'Error logout user', error });
+    }
+
+}
+
 module.exports = {
     login,
     register,
+    logout
 };
